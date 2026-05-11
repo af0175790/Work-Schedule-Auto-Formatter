@@ -59,21 +59,27 @@ user_input = st.text_area(
 
 # ---------------- PARSER FUNCTION ----------------
 def parse_input(text):
-    lines = [line.strip() for line in text.splitlines() if line.strip()]
 
     data = {}
-    current_date = None
 
-    for line in lines:
+    # Default today's work
+    current_date = "Today's Work"
 
-        # Detect date
-        if "/" in line and len(line) <= 15:
-            current_date = line
-            data[current_date] = []
+    data[current_date] = []
 
-        else:
-            if current_date:
-                data[current_date].append(line)
+    # Split paragraph into activities
+    activities = re.split(r',|\.| and ', text)
+
+    cleaned = []
+
+    for activity in activities:
+
+        activity = activity.strip()
+
+        if len(activity) > 4:
+            cleaned.append(activity)
+
+    data[current_date] = cleaned
 
     return data
 
